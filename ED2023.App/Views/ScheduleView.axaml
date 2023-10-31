@@ -11,8 +11,8 @@
     <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" IsReadOnly="True">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Код" Binding="{Binding Id}"/>
-            <DataGridTextColumn Header="Начало" Binding="{Binding Start, StringFormat='dd MMMM YY HH:mm'}"/>
-            <DataGridTextColumn Header="Конец" Binding="{Binding End, StringFormat='dd MMMM YY HH:mm'}"/>
+            <DataGridTextColumn Header="Начало" Binding="{Binding Start, StringFormat='dd MMMM yyyy HH:mm'}"/>
+            <DataGridTextColumn Header="Конец" Binding="{Binding End, StringFormat='dd MMMM yyyy HH:mm'}"/>
             <DataGridTextColumn Header="Курс" Binding="{Binding Course.Title}"/>
             <DataGridTextColumn Header="Группа" Binding="{Binding Group.Name}"/>
         </DataGrid.Columns>
