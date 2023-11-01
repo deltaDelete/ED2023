@@ -12,7 +12,7 @@ using ReactiveUI;
 
 namespace ED2023.App.ViewModels;
 
-public partial class TableViewModelBase<T> : TableViewModelBase {
+public class TableViewModelBase<T> : TableViewModelBase {
     private List<T> _itemsFull = null!;
 
     private readonly Func<List<T>> _databaseGetter;
@@ -63,14 +63,6 @@ public partial class TableViewModelBase<T> : TableViewModelBase {
 
     #endregion
 
-    public new ReactiveCommand<T, Unit> EditItemCommand { get; }
-    public new ReactiveCommand<T, Unit> RemoveItemCommand { get; }
-    public override ReactiveCommand<Unit, Unit> NewItemCommand { get; }
-    public override ReactiveCommand<Unit, Unit> TakeNextCommand { get; }
-    public override ReactiveCommand<Unit, Unit> TakePrevCommand { get; }
-    public override ReactiveCommand<Unit, Unit> TakeFirstCommand { get; }
-    public override ReactiveCommand<Unit, Unit> TakeLastCommand { get; }
-
     public TableViewModelBase(
         Func<List<T>> databaseGetter,
         Dictionary<int, Func<T, object>> orderSelectors,
@@ -113,8 +105,8 @@ public partial class TableViewModelBase<T> : TableViewModelBase {
         TakePrevCommand = ReactiveCommand.Create(TakePrev, canTakeBack);
         TakeFirstCommand = ReactiveCommand.Create(TakeFirst, canTakeBack);
         TakeLastCommand = ReactiveCommand.Create(TakeLast, canTakeLast);
-        EditItemCommand = ReactiveCommand.Create<T>(_editItem); //, canEdit);
-        RemoveItemCommand = ReactiveCommand.Create<T>(_removeItem); // , canEdit);
+        EditItemCommand = ReactiveCommand.Create<object?>(o => _editItem((T?)o)); //, canEdit);
+        RemoveItemCommand = ReactiveCommand.Create<object?>(o => _removeItem((T?)o)); // , canEdit);
         NewItemCommand = ReactiveCommand.CreateFromTask(_newItem); //, canInsert);
 
         GetDataFromDb();
@@ -226,13 +218,13 @@ public abstract class TableViewModelBase : ViewModelBase {
     private int _currentPage = 1;
     private bool _isLoading = true;
 
-    public ReactiveCommand<object, Unit> EditItemCommand { get; }
-    public ReactiveCommand<object, Unit> RemoveItemCommand { get; }
-    public abstract ReactiveCommand<Unit, Unit> NewItemCommand { get; }
-    public abstract ReactiveCommand<Unit, Unit> TakeNextCommand { get; }
-    public abstract ReactiveCommand<Unit, Unit> TakePrevCommand { get; }
-    public abstract ReactiveCommand<Unit, Unit> TakeFirstCommand { get; }
-    public abstract ReactiveCommand<Unit, Unit> TakeLastCommand { get; }
+    public ReactiveCommand<object?, Unit> EditItemCommand { get; protected set; }
+    public ReactiveCommand<object?, Unit> RemoveItemCommand { get; protected set; }
+    public ReactiveCommand<Unit, Unit> NewItemCommand { get; protected set; }
+    public ReactiveCommand<Unit, Unit> TakeNextCommand { get; protected set; }
+    public ReactiveCommand<Unit, Unit> TakePrevCommand { get; protected set; }
+    public ReactiveCommand<Unit, Unit> TakeFirstCommand { get; protected set; }
+    public ReactiveCommand<Unit, Unit> TakeLastCommand { get; protected set; }
 
 
     public int SelectedSearchColumn {
