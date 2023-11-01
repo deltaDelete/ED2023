@@ -46,7 +46,7 @@ namespace ED2023.Database.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Teathers",
+                name: "Teachers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -63,7 +63,7 @@ namespace ED2023.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Teathers", x => x.Id);
+                    table.PrimaryKey("PK_Teachers", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -77,15 +77,15 @@ namespace ED2023.Database.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TeatherId = table.Column<int>(type: "int", nullable: false)
+                    TeacherId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Courses_Teathers_TeatherId",
-                        column: x => x.TeatherId,
-                        principalTable: "Teathers",
+                        name: "FK_Courses_Teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "Teachers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -99,15 +99,15 @@ namespace ED2023.Database.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ResponsibleTeatherId = table.Column<int>(type: "int", nullable: false)
+                    ResponsibleTeacherId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Groups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Groups_Teathers_ResponsibleTeatherId",
-                        column: x => x.ResponsibleTeatherId,
-                        principalTable: "Teathers",
+                        name: "FK_Groups_Teachers_ResponsibleTeacherId",
+                        column: x => x.ResponsibleTeacherId,
+                        principalTable: "Teachers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -344,14 +344,14 @@ namespace ED2023.Database.Migrations
             //     column: "GroupsId");
             //
             // migrationBuilder.CreateIndex(
-            //     name: "IX_Courses_TeatherId",
+            //     name: "IX_Courses_TeacherId",
             //     table: "Courses",
-            //     column: "TeatherId");
+            //     column: "TeacherId");
             //
             // migrationBuilder.CreateIndex(
-            //     name: "IX_Groups_ResponsibleTeatherId",
+            //     name: "IX_Groups_ResponsibleTeacherId",
             //     table: "Groups",
-            //     column: "ResponsibleTeatherId");
+            //     column: "ResponsibleTeacherId");
             //
             // migrationBuilder.CreateIndex(
             //     name: "IX_Payments_ClientId",
@@ -416,7 +416,7 @@ namespace ED2023.Database.Migrations
                 name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "Teathers");
+                name: "Teachers");
         }
     }
 }

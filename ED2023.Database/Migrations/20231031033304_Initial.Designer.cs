@@ -128,7 +128,7 @@ namespace ED2023.Database.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("TeatherId")
+                    b.Property<int>("TeacherId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -137,7 +137,7 @@ namespace ED2023.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeatherId");
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Courses");
                 });
@@ -152,12 +152,12 @@ namespace ED2023.Database.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("ResponsibleTeatherId")
+                    b.Property<int>("ResponsibleTeacherId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ResponsibleTeatherId");
+                    b.HasIndex("ResponsibleTeacherId");
 
                     b.ToTable("Groups");
                 });
@@ -269,7 +269,7 @@ namespace ED2023.Database.Migrations
                     b.ToTable("Services");
                 });
 
-            modelBuilder.Entity("ED2023.Database.Models.Teather", b =>
+            modelBuilder.Entity("ED2023.Database.Models.Teacher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -296,7 +296,7 @@ namespace ED2023.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teathers");
+                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("CourseGroup", b =>
@@ -369,24 +369,24 @@ namespace ED2023.Database.Migrations
 
             modelBuilder.Entity("ED2023.Database.Models.Course", b =>
                 {
-                    b.HasOne("ED2023.Database.Models.Teather", "Teather")
+                    b.HasOne("ED2023.Database.Models.Teacher", "Teacher")
                         .WithMany("Courses")
-                        .HasForeignKey("TeatherId")
+                        .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Teather");
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("ED2023.Database.Models.Group", b =>
                 {
-                    b.HasOne("ED2023.Database.Models.Teather", "ResponsibleTeather")
+                    b.HasOne("ED2023.Database.Models.Teacher", "ResponsibleTeacher")
                         .WithMany()
-                        .HasForeignKey("ResponsibleTeatherId")
+                        .HasForeignKey("ResponsibleTeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ResponsibleTeather");
+                    b.Navigation("ResponsibleTeacher");
                 });
 
             modelBuilder.Entity("ED2023.Database.Models.Payment", b =>
@@ -449,7 +449,7 @@ namespace ED2023.Database.Migrations
                     b.Navigation("Services");
                 });
 
-            modelBuilder.Entity("ED2023.Database.Models.Teather", b =>
+            modelBuilder.Entity("ED2023.Database.Models.Teacher", b =>
                 {
                     b.Navigation("Courses");
                 });
