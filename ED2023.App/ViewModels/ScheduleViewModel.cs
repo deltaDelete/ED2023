@@ -13,11 +13,11 @@ public class ScheduleViewModel : ViewModelBase {
     public BindingList<Schedule> Items { get; set; }
 
     public ScheduleViewModel() {
-        GetItems();
+        Items = GetItems();
     }
 
-    private void GetItems() {
-        Items = new BindingList<Schedule>(
+    private BindingList<Schedule> GetItems() {
+         return new BindingList<Schedule>(
             DatabaseContext.Instance.Schedules.Take(_pageItems)
                 .Include(x => x.Course)
                 .Include(x => x.Group)

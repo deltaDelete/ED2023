@@ -45,8 +45,7 @@ public partial class TableViewModelBase<T> : TableViewModelBase {
     private T? _selectedRow = default;
 
     #region Notifying Properties
-
-    // TODO: ЯВНЫЕ БЭКФИЛДЫ
+    
     public new BindingList<T> Items {
         get => _items;
         set => this.RaiseAndSetIfChanged(ref _items, value);
@@ -66,11 +65,11 @@ public partial class TableViewModelBase<T> : TableViewModelBase {
 
     public new ReactiveCommand<T, Unit> EditItemCommand { get; }
     public new ReactiveCommand<T, Unit> RemoveItemCommand { get; }
-    public new ReactiveCommand<Unit, Unit> NewItemCommand { get; }
-    public new ReactiveCommand<Unit, Unit> TakeNextCommand { get; }
-    public new ReactiveCommand<Unit, Unit> TakePrevCommand { get; }
-    public new ReactiveCommand<Unit, Unit> TakeFirstCommand { get; }
-    public new ReactiveCommand<Unit, Unit> TakeLastCommand { get; }
+    public override ReactiveCommand<Unit, Unit> NewItemCommand { get; }
+    public override ReactiveCommand<Unit, Unit> TakeNextCommand { get; }
+    public override ReactiveCommand<Unit, Unit> TakePrevCommand { get; }
+    public override ReactiveCommand<Unit, Unit> TakeFirstCommand { get; }
+    public override ReactiveCommand<Unit, Unit> TakeLastCommand { get; }
 
     public TableViewModelBase(
         Func<List<T>> databaseGetter,
@@ -130,10 +129,6 @@ public partial class TableViewModelBase<T> : TableViewModelBase {
         this.WhenAnyValue(
             x => x.Filtered
         ).Subscribe(_ => TakeFirst());
-
-        // this.WhenAnyValue(
-        //     x => x.Items
-        // ).Subscribe(_ => IsLoading = false);
     }
 
     private void OnSearchChanged((string query, int column, bool isDescending) tuple) {
@@ -147,10 +142,10 @@ public partial class TableViewModelBase<T> : TableViewModelBase {
                 _filterSelectors.GetValueOrDefault(tuple.column, _defaultFilterSelector)(tuple.query.ToLower()));
 
         Filtered = tuple.isDescending switch {
-            (true) => filtered.OrderByDescending(_orderSelectors.GetValueOrDefault(tuple.column, _defaultOrderSelector))
-                .ToList(),
-            (false) => filtered.OrderBy(_orderSelectors.GetValueOrDefault(tuple.column, _defaultOrderSelector))
-                .ToList(),
+            true => filtered.OrderByDescending(_orderSelectors.GetValueOrDefault(tuple.column, _defaultOrderSelector))
+                            .ToList(),
+            false => filtered.OrderBy(_orderSelectors.GetValueOrDefault(tuple.column, _defaultOrderSelector))
+                             .ToList(),
         };
     }
 
@@ -161,7 +156,7 @@ public partial class TableViewModelBase<T> : TableViewModelBase {
                 throw new NullReferenceException();
             }
 
-            var list = _databaseGetter?.Invoke();
+            var list = _databaseGetter.Invoke();
             _itemsFull = list ?? new List<T>();
             Filtered = _itemsFull;
             IsLoading = false;
@@ -170,56 +165,11 @@ public partial class TableViewModelBase<T> : TableViewModelBase {
         });
     }
 
-    // protected async void RemoveItem(T? arg) {
-    //     if (arg is null) return;
-    //     // await new ConfirmationDialog(
-    //     //     "Вы собираетесь удалить строку",
-    //     //     $"Пользователь: {arg.LastName} {arg.FirstName} {arg.MiddleName}",
-    //     //     async dialog =>
-    //     //     {
-    //     //         await using var db = new MyDatabase();
-    //     //         await db.RemoveAsync(arg);
-    //     //         RemoveLocal(arg);
-    //     //     },
-    //     //     dialog => { }
-    //     // ).ShowDialog(_clientView);
-    //     throw new NotImplementedException();
-    // }
-
     protected void RemoveLocal(T arg) {
         Items.Remove(arg);
         _itemsFull.Remove(arg);
         Filtered.Remove(arg);
     }
-
-    // private async void EditItem(T? arg) {
-    //     if (arg is null) return;
-    //     await EditDialog.NewInstance(
-    //         async item => {
-    //             await using var db = new MyDatabase();
-    //             await db.UpdateAsync(item.ClientId, item);
-    //             ReplaceItem(arg, item);
-    //         },
-    //         arg,
-    //         title: "Изменить клиента"
-    //     ).ShowDialog(MainWindow);
-    //     // throw new NotImplementedException();
-    // }
-
-    // private async Task NewItem() {
-    //     await EditDialog.NewInstance<T>(
-    //         async item => {
-    //             await using var db = new MyDatabase();
-    //             int newItemId = Convert.ToInt32(await db.InsertAsync(item));
-    //             item.ClientId = newItemId;
-    //             _itemsFull.Add(item);
-    //             if (Items.Count < 10) {
-    //                 Items.Add(item);
-    //             }
-    //         },
-    //         title: "Новый клиент"
-    //     ).ShowDialog(MainWindow);
-    // }
 
     protected void ReplaceItem(T prevItem, T newItem) {
         if (Filtered.Contains(prevItem)) {
@@ -278,11 +228,11 @@ public abstract class TableViewModelBase : ViewModelBase {
 
     public ReactiveCommand<object, Unit> EditItemCommand { get; }
     public ReactiveCommand<object, Unit> RemoveItemCommand { get; }
-    public ReactiveCommand<Unit, Unit> NewItemCommand { get; }
-    public ReactiveCommand<Unit, Unit> TakeNextCommand { get; }
-    public ReactiveCommand<Unit, Unit> TakePrevCommand { get; }
-    public ReactiveCommand<Unit, Unit> TakeFirstCommand { get; }
-    public ReactiveCommand<Unit, Unit> TakeLastCommand { get; }
+    public abstract ReactiveCommand<Unit, Unit> NewItemCommand { get; }
+    public abstract ReactiveCommand<Unit, Unit> TakeNextCommand { get; }
+    public abstract ReactiveCommand<Unit, Unit> TakePrevCommand { get; }
+    public abstract ReactiveCommand<Unit, Unit> TakeFirstCommand { get; }
+    public abstract ReactiveCommand<Unit, Unit> TakeLastCommand { get; }
 
 
     public int SelectedSearchColumn {
@@ -329,7 +279,7 @@ public abstract class TableViewModelBase : ViewModelBase {
         }
     }
 
-    public List<object> Filtered { get; set; } = new List<object>();
+    public List<object> Filtered { get; set; } = new();
     public BindingList<object> Items { get; set; } = new();
     public object? SelectedRow { get; set; } = default;
 }

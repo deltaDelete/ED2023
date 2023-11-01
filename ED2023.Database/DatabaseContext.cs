@@ -6,7 +6,9 @@ namespace ED2023.Database;
 /// <inheritdoc cref="DbContext"/>
 public class DatabaseContext : DbContext {
     public static readonly string
-        ConnectionString = "server=10.10.1.24;user=user_01;password=user01pro;database=pro1_2";
+        ConnectionString = 
+            "server=localhost;user=dev;password=devPassword;database=ed2023";
+            // "server=10.10.1.24;user=user_01;password=user01pro;database=pro1_2";
 
     public DbSet<Attendance> Attendances { get; set; }
     public DbSet<Client> Clients { get; set; }
@@ -30,10 +32,6 @@ public class DatabaseContext : DbContext {
             ConnectionString,
             ServerVersion.AutoDetect(ConnectionString)
         );
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        base.OnModelCreating(modelBuilder);
     }
 
     private static readonly Lazy<DatabaseContext> LazyInstance = new Lazy<DatabaseContext>(() => new DatabaseContext());
