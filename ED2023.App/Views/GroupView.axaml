@@ -10,13 +10,14 @@
                           x:TypeArguments="vm:TableViewModelBase"
                           x:DataType="vm:TableViewModelBase">
     <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="5"
-                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
-            <Button Content="Создать группу" />
-            <Button Content="Изменить группу" />
-            <Button Content="Удалить группу" />
-        </StackPanel>
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="5"
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <Button Content="Создать группу" Command="{Binding NewItemCommand}"/>
+                <Button Content="Изменить группу" Command="{Binding EditItemCommand}" CommandParameter="{Binding SelectedRow}"/>
+                <Button Content="Удалить группу" Command="{Binding RemoveItemCommand}" CommandParameter="{Binding SelectedRow}"/>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="5"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <StackPanel Orientation="Horizontal" Spacing="5" DockPanel.Dock="Bottom" HorizontalAlignment="Center"
                         Margin="10">
@@ -47,14 +48,15 @@
                         <DataGridTextColumn.Binding>
                             <MultiBinding StringFormat="{}{0} {1}">
                                 <MultiBinding.Bindings>
-                                    <Binding Path="ResponsibleTeather.LastName" />
-                                    <Binding Path="ResponsibleTeather.FirstName" />
+                                    <Binding Path="ResponsibleTeacher.LastName" />
+                                    <Binding Path="ResponsibleTeacher.FirstName" />
                                 </MultiBinding.Bindings>
                             </MultiBinding>
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
                     <DataGridTextColumn x:DataType="models:Group" Header="Курс" Binding="{Binding Course.Title}" />
-                    <DataGridTextColumn x:DataType="models:Group" Header="Количество студентов" Binding="{Binding Members.Count}" />
+                    <DataGridTextColumn x:DataType="models:Group" Header="Количество студентов"
+                                        Binding="{Binding Members.Count}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
