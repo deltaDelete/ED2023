@@ -22,4 +22,6 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
+    
+    public MainWindow MainWindow => (ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow! as MainWindow;
 }

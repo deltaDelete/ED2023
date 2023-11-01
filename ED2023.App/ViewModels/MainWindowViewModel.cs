@@ -10,9 +10,7 @@ public class MainWindowViewModel : ViewModelBase
     public string Greeting => "Welcome to Avalonia!";
 
     public BindingList<Models.TabItem> Tabs { get; set; } = new BindingList<Models.TabItem>() {
-        new Models.TabItem("Расписание", new ScheduleView()),
-        new("Страница 1", new Button() {
-            Content = "Клик"
-        })
+        new ("Расписание", new ScheduleView()),
+        new("Группы", new GroupView())
     };
 }

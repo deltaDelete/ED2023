@@ -1,0 +1,62 @@
+<rxui:ReactiveUserControl xmlns="https://github.com/avaloniaui"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                          xmlns:rxui="http://reactiveui.net"
+                          xmlns:vm="clr-namespace:ED2023.App.ViewModels"
+                          xmlns:models="clr-namespace:ED2023.Database.Models;assembly=ED2023.Database"
+                          mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                          x:Class="ED2023.App.Views.GroupView"
+                          x:TypeArguments="vm:TableViewModelBase"
+                          x:DataType="vm:TableViewModelBase">
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="5"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <Button Content="Создать группу" />
+            <Button Content="Изменить группу" />
+            <Button Content="Удалить группу" />
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="5"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Horizontal" Spacing="5" DockPanel.Dock="Bottom" HorizontalAlignment="Center"
+                        Margin="10">
+                <Button Content="В начало" Command="{Binding TakeFirstCommand}" />
+                <Button Content="Назад" Command="{Binding TakePrevCommand}" />
+                <TextBlock VerticalAlignment="Center">
+                    <Run Text="{Binding CurrentPage}" />
+                    <Run Text="/" />
+                    <Run Text="{Binding TotalPages}" />
+                </TextBlock>
+                <Button Content="Вперед" Command="{Binding TakeNextCommand}" />
+                <Button Content="В конец" Command="{Binding TakeLastCommand}" />
+            </StackPanel>
+        </StackPanel>
+        <Grid>
+            <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsLoading}" HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+            <DataGrid ItemsSource="{Binding Items}"
+                      AutoGenerateColumns="False"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      IsReadOnly="True"
+                      x:CompileBindings="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:DataType="models:Group" Header="Код" Binding="{Binding Id}" />
+                    <DataGridTextColumn x:DataType="models:Group" Header="Наименование" Binding="{Binding Name}" />
+                    <DataGridTextColumn x:DataType="models:Group" Header="Руководитель">
+                        <DataGridTextColumn.Binding>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <MultiBinding.Bindings>
+                                    <Binding Path="ResponsibleTeather.LastName" />
+                                    <Binding Path="ResponsibleTeather.FirstName" />
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn x:DataType="models:Group" Header="Курс" Binding="{Binding Course.Title}" />
+                    <DataGridTextColumn x:DataType="models:Group" Header="Количество студентов" Binding="{Binding Members.Count}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+</rxui:ReactiveUserControl>
