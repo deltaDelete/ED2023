@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ED2023.App.ViewModels;
@@ -22,6 +23,10 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
-    
-    public MainWindow MainWindow => (ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow! as MainWindow;
+}
+
+public static class ApplicationExtensions {
+    public static MainWindow MainWindow(this Application app) {
+        return ((app.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)!.MainWindow! as MainWindow)!;
+    }
 }
