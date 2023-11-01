@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ED2023.Database.Models; 
 
-public class Teather {
+public class Teacher {
     [Key]
     public int Id { get; set; }
     public string LastName { get; set; } = string.Empty;

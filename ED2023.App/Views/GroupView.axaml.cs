@@ -28,14 +28,14 @@ public partial class GroupView : ReactiveUserControl<TableViewModelBase<Group>> 
     private static readonly Dictionary<int,Func<Group,object>> OrderSelectors = new() {
         {1, it => it.Id},
         {2, it => it.Name},
-        {3, it => $"{it.ResponsibleTeather.LastName} {it.ResponsibleTeather.FirstName}" },
+        {3, it => $"{it.ResponsibleTeacher.LastName} {it.ResponsibleTeacher.FirstName}" },
         {4, it => it.Course.Title},
     };
 
     private static readonly Dictionary<int, Func<string, Func<Group, bool>>> FilterSelectors = new() {
         { 1, query => it => it.Id.ToString().Contains(query) },
         { 2, query => it => it.Name.ToLower().Contains(query) },
-        { 3, query => it => $"{it.ResponsibleTeather.LastName} {it.ResponsibleTeather.FirstName}".ToLower().Contains(query) },
+        { 3, query => it => $"{it.ResponsibleTeacher.LastName} {it.ResponsibleTeacher.FirstName}".ToLower().Contains(query) },
         { 4, query => it => it.Course.Title.ToLower().Contains(query) },
     };
 
@@ -48,7 +48,7 @@ public partial class GroupView : ReactiveUserControl<TableViewModelBase<Group>> 
         return DatabaseContext.Instance.Groups
             .Include(x => x.Course)
             .Include(x => x.Members)
-            .Include(x => x.ResponsibleTeather)
+            .Include(x => x.ResponsibleTeacher)
             .ToList();
     }
 }

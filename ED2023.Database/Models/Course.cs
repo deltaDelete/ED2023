@@ -8,7 +8,7 @@ public class Course {
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
 
-    public Teather Teather { get; set; }
+    public Teacher Teacher { get; set; }
 
     public ICollection<Group> Groups { get; }
 }

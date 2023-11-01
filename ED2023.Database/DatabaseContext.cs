@@ -18,7 +18,7 @@ public class DatabaseContext : DbContext {
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<Service> Services { get; set; }
-    public DbSet<Teather> Teathers { get; set; }
+    public DbSet<Teacher> Teachers { get; set; }
     
     /// <inheritdoc cref="DbContext"/>
     public DatabaseContext() {
