@@ -7,8 +7,8 @@ namespace ED2023.Database;
 public class DatabaseContext : DbContext {
     public static readonly string
         ConnectionString = 
-            "server=localhost;user=dev;password=devPassword;database=ed2023";
-            // "server=10.10.1.24;user=user_01;password=user01pro;database=pro1_2";
+            // "server=localhost;user=dev;password=devPassword;database=ed2023";
+            "server=10.10.1.24;user=user_01;password=user01pro;database=pro1_2";
 
     public DbSet<Attendance> Attendances { get; set; }
     public DbSet<Client> Clients { get; set; }

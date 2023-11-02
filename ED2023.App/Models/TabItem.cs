@@ -2,11 +2,25 @@ using System;
 using Avalonia;
 using Avalonia.Controls;
 
-namespace ED2023.App.Models; 
+namespace ED2023.App.Models;
 
-// public record class TabItem {
-//     public string Header { get; set; }
-//     public Type PageType { get; set; }
-// }
+public class TabItem {
+    public string Header { get; set; }
+    public Control? Content { get; set; }
 
-public record class TabItem(string Header, Control Content);
+    public string? Text {
+        get => Content is TextBlock tb ? tb.Text : null;
+        set {
+            if (Content is null) {
+                Content = new TextBlock() {
+                    Text = value
+                };
+                return;
+            }
+
+            if (Content is TextBlock tb) {
+                tb.Text = value;
+            }
+        }
+    }
+}

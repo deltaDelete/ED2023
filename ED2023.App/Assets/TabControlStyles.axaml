@@ -1,0 +1,66 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:ED2023.App.Models"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections">
+    <Styles.Resources>
+        <ResourceDictionary>
+            <generic:List x:Key="Items" x:TypeArguments="models:TabItem">
+                <models:TabItem Header="Пример 1" Text="Текст пример 1" />
+                <models:TabItem Header="Пример 2" Text="Текст пример 2" />
+            </generic:List>
+        </ResourceDictionary>
+    </Styles.Resources>
+    <Design.PreviewWith>
+        <TabControl ItemsSource="{DynamicResource Items}"
+                    Width="640"
+                    Height="360"/>
+    </Design.PreviewWith>
+
+    <Style Selector="TabControl">
+        <Style Selector="^ /template/ ItemsPresenter#PART_ItemsPresenter > WrapPanel">
+            <Setter Property="Background" Value="#1011aaee" />
+        </Style>
+        <Setter Property="TabStripPlacement" Value="Left" />
+        <Setter Property="ItemTemplate">
+            <DataTemplate x:DataType="models:TabItem">
+                <Border Name="TabItemBorder" CornerRadius="8" Padding="8" Margin="4" BorderThickness="2">
+                    <TextBlock Text="{Binding Header}" />
+                </Border>
+            </DataTemplate>
+        </Setter>
+        <Setter Property="ContentTemplate">
+            <DataTemplate x:DataType="models:TabItem">
+                <DockPanel LastChildFill="True">
+                    <ContentControl Content="{Binding Content}" />
+                </DockPanel>
+            </DataTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="TabItem">
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_SelectedPipe">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Width" Value="0" />
+            <Setter Property="Height" Value="0" />
+        </Style>
+        <Style Selector="^ Border#TabItemBorder">
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="BorderThickness" Value="2" />
+        </Style>
+        <Style Selector="^:selected Border#TabItemBorder">
+            <Setter Property="BorderBrush" Value="#11aaee" />
+        </Style>
+        <Style Selector="^:pointerover Border#TabItemBorder">
+            <Setter Property="BorderBrush" Value="#c011aaee" />
+        </Style>
+    </Style>
+</Styles>

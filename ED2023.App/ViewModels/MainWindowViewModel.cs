@@ -9,8 +9,14 @@ public class MainWindowViewModel : ViewModelBase
 {
     public string Greeting => "Welcome to Avalonia!";
 
-    public BindingList<Models.TabItem> Tabs { get; set; } = new BindingList<Models.TabItem>() {
-        new ("Расписание", new ScheduleView()),
-        new("Группы", new GroupView())
+    public BindingList<Models.TabItem> Tabs { get; set; } = new() {
+        new () {
+            Header = "Расписание",
+            Content = new ScheduleView()
+        },
+        new() {
+            Header = "Группы", 
+            Content = new GroupView()
+        }
     };
 }
