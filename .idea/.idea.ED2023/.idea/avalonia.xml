@@ -5,6 +5,10 @@
       <map>
         <entry key="ED2023.App/App.axaml" value="ED2023.App/ED2023.App.csproj" />
         <entry key="ED2023.App/Assets/TabControlStyles.axaml" value="ED2023.App/ED2023.App.csproj" />
+        <entry key="ED2023.App/Contols/IconButton.axaml" value="ED2023.App/ED2023.App.csproj" />
+        <entry key="ED2023.App/Views/Dialogs/EditGroupDialog.axaml" value="ED2023.App/ED2023.App.csproj" />
+        <entry key="ED2023.App/Views/Dialogs/EditGroupView.axaml" value="ED2023.App/ED2023.App.csproj" />
+        <entry key="ED2023.App/Views/Dialogs/EditGroupWindow.axaml" value="ED2023.App/ED2023.App.csproj" />
         <entry key="ED2023.App/Views/GroupView.axaml" value="ED2023.App/ED2023.App.csproj" />
         <entry key="ED2023.App/Views/MainWindow.axaml" value="ED2023.App/ED2023.App.csproj" />
         <entry key="ED2023.App/Views/Page1.axaml" value="ED2023.App/ED2023.App.csproj" />

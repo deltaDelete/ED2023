@@ -12,9 +12,27 @@
         </ResourceDictionary>
     </Styles.Resources>
     <Design.PreviewWith>
-        <TabControl ItemsSource="{DynamicResource Items}"
-                    Width="640"
-                    Height="360"/>
+        <StackPanel Spacing="15">
+            <TabControl ItemsSource="{DynamicResource Items}"
+                        Width="640"
+                        Height="360" />
+            <WrapPanel Classes="spaced-8" Orientation="Horizontal">
+                <Button Content="1" />
+                <Button Content="2" />
+                <Button Content="2" />
+                <Button Content="2" />
+                <Button Content="2" />
+                <Button Content="2" />
+            </WrapPanel>
+            <WrapPanel Classes="spaced-8" Orientation="Vertical">
+                <Button Content="1" />
+                <Button Content="2" />
+                <Button Content="2" />
+                <Button Content="2" />
+                <Button Content="2" />
+                <Button Content="2" />
+            </WrapPanel>
+        </StackPanel>
     </Design.PreviewWith>
 
     <Style Selector="TabControl">
@@ -61,6 +79,14 @@
         </Style>
         <Style Selector="^:pointerover Border#TabItemBorder">
             <Setter Property="BorderBrush" Value="#c011aaee" />
+        </Style>
+    </Style>
+    <Style Selector="WrapPanel.spaced-8">
+        <Style Selector="^[Orientation=Horizontal] > :is(Control):not(:nth-child(1))">
+            <Setter Property="Margin" Value="8 0 0 0" />
+        </Style>
+        <Style Selector="^[Orientation=Vertical] > :is(Control):not(:nth-child(1))">
+            <Setter Property="Margin" Value="0 8 0 0" />
         </Style>
     </Style>
 </Styles>

@@ -9,6 +9,6 @@ public class Group {
     
     public Teacher ResponsibleTeacher { get; set; }
     
-    public ICollection<Client> Members { get; }
+    public ICollection<Client> Members { get; init; }
     public Course Course { get; set; }
 }

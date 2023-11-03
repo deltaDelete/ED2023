@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using ED2023.App.Views;
 using ED2023.Database;
 using ED2023.Database.Models;
@@ -45,7 +46,7 @@ public class TableViewModelBase<T> : TableViewModelBase {
     private T? _selectedRow = default;
 
     #region Notifying Properties
-    
+
     public new BindingList<T> Items {
         get => _items;
         set => this.RaiseAndSetIfChanged(ref _items, value);
@@ -105,9 +106,10 @@ public class TableViewModelBase<T> : TableViewModelBase {
         TakePrevCommand = ReactiveCommand.Create(TakePrev, canTakeBack);
         TakeFirstCommand = ReactiveCommand.Create(TakeFirst, canTakeBack);
         TakeLastCommand = ReactiveCommand.Create(TakeLast, canTakeLast);
-        EditItemCommand = ReactiveCommand.Create<object?>(o => _editItem((T?)o)); //, canEdit);
-        RemoveItemCommand = ReactiveCommand.Create<object?>(o => _removeItem((T?)o)); // , canEdit);
+        EditItemCommand = ReactiveCommand.Create(() => _editItem(SelectedRow)); //, canEdit);
+        RemoveItemCommand = ReactiveCommand.Create(() => _removeItem(SelectedRow)); // , canEdit);
         NewItemCommand = ReactiveCommand.CreateFromTask(_newItem); //, canInsert);
+        ReloadCommand = ReactiveCommand.Create(GetDataFromDb);
 
         GetDataFromDb();
 
@@ -135,9 +137,9 @@ public class TableViewModelBase<T> : TableViewModelBase {
 
         Filtered = tuple.isDescending switch {
             true => filtered.OrderByDescending(_orderSelectors.GetValueOrDefault(tuple.column, _defaultOrderSelector))
-                            .ToList(),
+                .ToList(),
             false => filtered.OrderBy(_orderSelectors.GetValueOrDefault(tuple.column, _defaultOrderSelector))
-                             .ToList(),
+                .ToList(),
         };
     }
 
@@ -157,13 +159,20 @@ public class TableViewModelBase<T> : TableViewModelBase {
         });
     }
 
-    protected void RemoveLocal(T arg) {
+    public void RemoveLocal(T arg) {
         Items.Remove(arg);
         _itemsFull.Remove(arg);
         Filtered.Remove(arg);
     }
 
-    protected void ReplaceItem(T prevItem, T newItem) {
+    public void AddLocal(T arg) {
+        _itemsFull.Add(arg);
+        if (Items.Count < 10) {
+            Items.Add(arg);
+        }
+    }
+
+    public void ReplaceItem(T prevItem, T newItem) {
         if (Filtered.Contains(prevItem)) {
             var index = Filtered.IndexOf(prevItem);
             Filtered[index] = newItem;
@@ -218,13 +227,14 @@ public abstract class TableViewModelBase : ViewModelBase {
     private int _currentPage = 1;
     private bool _isLoading = true;
 
-    public ReactiveCommand<object?, Unit> EditItemCommand { get; protected set; }
-    public ReactiveCommand<object?, Unit> RemoveItemCommand { get; protected set; }
+    public ReactiveCommand<Unit, Unit> EditItemCommand { get; protected set; }
+    public ReactiveCommand<Unit, Unit> RemoveItemCommand { get; protected set; }
     public ReactiveCommand<Unit, Unit> NewItemCommand { get; protected set; }
     public ReactiveCommand<Unit, Unit> TakeNextCommand { get; protected set; }
     public ReactiveCommand<Unit, Unit> TakePrevCommand { get; protected set; }
     public ReactiveCommand<Unit, Unit> TakeFirstCommand { get; protected set; }
     public ReactiveCommand<Unit, Unit> TakeLastCommand { get; protected set; }
+    public ReactiveCommand<Unit, Unit> ReloadCommand { get; protected set; }
 
 
     public int SelectedSearchColumn {

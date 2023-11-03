@@ -5,7 +5,6 @@
                           xmlns:rxui="http://reactiveui.net"
                           xmlns:vm="clr-namespace:ED2023.App.ViewModels"
                           xmlns:models="clr-namespace:ED2023.Database.Models;assembly=ED2023.Database"
-                          xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
                           mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                           x:Class="ED2023.App.Views.GroupView"
                           x:TypeArguments="vm:TableViewModelBase"
@@ -16,18 +15,14 @@
     <DockPanel LastChildFill="True">
         <ScrollViewer HorizontalScrollBarVisibility="Auto" DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal" Spacing="5">
-                <TextBox MinWidth="256" Text="{Binding SearchQuery, Mode=TwoWay}"/>
-                <ComboBox SelectedIndex="{Binding SelectedSearchColumn}" ItemsSource="{Binding #Table.Columns}" DisplayMemberBinding="{Binding Header}">
-                    <!-- <ComboBoxItem>Все столбцы</ComboBoxItem> -->
-                    <!-- <ComboBoxItem>Код</ComboBoxItem> -->
-                    <!-- <ComboBoxItem>Фамилия</ComboBoxItem> -->
-                    <!-- <ComboBoxItem>Имя</ComboBoxItem> -->
-                    <!-- <ComboBoxItem>Отчество</ComboBoxItem> -->
-                </ComboBox>
+                <TextBox MinWidth="256" Text="{Binding SearchQuery, Mode=TwoWay}" />
+                <ComboBox SelectedIndex="{Binding SelectedSearchColumn}" ItemsSource="{Binding #Table.Columns}"
+                          DisplayMemberBinding="{Binding Header}" />
                 <CheckBox IsChecked="{Binding IsSortByDescending}">Сортировка по убыванию</CheckBox>
-                <Button Content="Создать группу" Command="{Binding NewItemCommand}"/>
-                <Button Content="Изменить группу" Command="{Binding EditItemCommand}" CommandParameter="{Binding SelectedRow}"/>
-                <Button Content="Удалить группу" Command="{Binding RemoveItemCommand}" CommandParameter="{Binding SelectedRow}"/>
+                <Button Content="Создать группу" Command="{Binding NewItemCommand}" />
+                <Button Content="Изменить группу" Command="{Binding EditItemCommand}" />
+                <Button Content="Удалить группу" Command="{Binding RemoveItemCommand}" />
+                <Button Content="Обновить" Command="{Binding ReloadCommand}"/>
             </StackPanel>
         </ScrollViewer>
         <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="5"
@@ -49,6 +44,7 @@
             <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsLoading}" HorizontalAlignment="Center"
                          VerticalAlignment="Center" />
             <DataGrid ItemsSource="{Binding Items}"
+                      SelectedItem="{Binding SelectedRow}"
                       AutoGenerateColumns="False"
                       CanUserResizeColumns="True"
                       CanUserSortColumns="True"
@@ -56,6 +52,7 @@
                       IsReadOnly="True"
                       x:CompileBindings="False">
                 <DataGrid.Columns>
+                    <DataGridTextColumn IsVisible="False" Header="Все столбцы" />
                     <DataGridTextColumn x:DataType="models:Group" Header="Код" Binding="{Binding Id}" />
                     <DataGridTextColumn x:DataType="models:Group" Header="Наименование" Binding="{Binding Name}" />
                     <DataGridTextColumn x:DataType="models:Group" Header="Руководитель">

@@ -1,0 +1,76 @@
+<rxui:ReactiveWindow x:TypeArguments="vm:EditGroupViewModel" xmlns="https://github.com/avaloniaui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:rxui="http://reactiveui.net"
+                     xmlns:vm="clr-namespace:ED2023.App.ViewModels"
+                     xmlns:m="clr-namespace:ED2023.Database.Models;assembly=ED2023.Database"
+                     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                     x:Class="ED2023.App.Views.Dialogs.EditGroupView"
+                     x:DataType="vm:EditGroupViewModel"
+                     Padding="8"
+                     Title="EditGroupWindow">
+    <Design.DataContext>
+        <vm:EditGroupViewModel />
+    </Design.DataContext>
+    <Window.Styles>
+        <Style Selector="Label">
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+        </Style>
+    </Window.Styles>
+    <DockPanel LastChildFill="True">
+        <DockPanel Margin="8 8 0 8" DockPanel.Dock="Top" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Left" Spacing="8">
+                <Label Content="Наименование" />
+                <Label Content="Руководитель" />
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" Spacing="8">
+                <TextBox Watermark="Наименование" Text="{Binding Item.Name}" />
+                <ComboBox ItemsSource="{Binding Teachers}"
+                          SelectedItem="{Binding Item.ResponsibleTeacher, FallbackValue='Не указано'}">
+                    <ComboBox.DisplayMemberBinding>
+                        <MultiBinding StringFormat="{}{0} {1}" x:DataType="m:Teacher">
+                            <MultiBinding.Bindings>
+                                <Binding Path="LastName" FallbackValue="Не" />
+                                <Binding Path="FirstName" FallbackValue="указано" />
+                            </MultiBinding.Bindings>
+                        </MultiBinding>
+                    </ComboBox.DisplayMemberBinding>
+                </ComboBox>
+                <ComboBox ItemsSource="{Binding Courses}"
+                          SelectedItem="{Binding Item.Course, FallbackValue='Не указано'}" 
+                          DisplayMemberBinding="{Binding Title, DataType=m:Course}"/>
+            </StackPanel>
+        </DockPanel>
+        <WrapPanel Classes="spaced-8" Margin="8 0 8 8" DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button Content="Добавить" Command="{Binding AddMemberCommand}"/>
+            <ComboBox ItemsSource="{Binding Clients}" 
+                      SelectedItem="{Binding MemberToAdd}">
+                <ComboBox.DisplayMemberBinding>
+                    <MultiBinding StringFormat="{}{0} {1}" x:DataType="m:Client">
+                        <MultiBinding.Bindings>
+                            <Binding Path="LastName" FallbackValue="Не" />
+                            <Binding Path="FirstName" FallbackValue="указано"/>
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </ComboBox.DisplayMemberBinding>
+            </ComboBox>
+        </WrapPanel>
+        <WrapPanel Classes="spaced-8" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button Content="Закрыть" Command="{Binding CloseCommand}"/>
+            <Button Content="Сохранить" Command="{Binding AcceptCommand}"/>
+        </WrapPanel>
+        <DataGrid ItemsSource="{Binding Item.Members}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Код"
+                                    Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Фамилия"
+                                    Binding="{Binding LastName}" />
+                <DataGridTextColumn Header="Имя"
+                                    Binding="{Binding FirstName}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</rxui:ReactiveWindow>
