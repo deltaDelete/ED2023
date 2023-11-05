@@ -6,6 +6,8 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Collections;
+using DynamicData;
 using ED2023.App.Views;
 using ED2023.Database;
 using ED2023.Database.Models;
@@ -41,13 +43,13 @@ public class TableViewModelBase<T> : TableViewModelBase {
     private readonly Action<T?> _editItem;
     private readonly Func<Task> _newItem;
     private readonly Action<T?> _removeItem;
-    private BindingList<T> _items = new();
+    private AvaloniaList<T> _items = new();
     private List<T> _filtered = new List<T>();
     private T? _selectedRow = default;
 
     #region Notifying Properties
 
-    public new BindingList<T> Items {
+    public new AvaloniaList<T> Items {
         get => _items;
         set => this.RaiseAndSetIfChanged(ref _items, value);
     }
@@ -174,8 +176,8 @@ public class TableViewModelBase<T> : TableViewModelBase {
 
     public void ReplaceItem(T prevItem, T newItem) {
         if (Filtered.Contains(prevItem)) {
-            var index = Filtered.IndexOf(prevItem);
-            Filtered[index] = newItem;
+            Filtered.Replace(prevItem, newItem);
+            // var index = Filtered.IndexOf(prevItem);
         }
 
         if (_itemsFull.Contains(prevItem)) {
@@ -184,8 +186,7 @@ public class TableViewModelBase<T> : TableViewModelBase {
         }
 
         if (Items.Contains(prevItem)) {
-            var index = _itemsFull.IndexOf(prevItem);
-            Items[index] = newItem;
+            Items.Replace(prevItem, newItem);
         }
     }
 

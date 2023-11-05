@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -12,76 +13,75 @@ using DynamicData.Binding;
 using ED2023.Database;
 using ED2023.Database.Models;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using MsBox.Avalonia;
 using ReactiveUI;
 
 namespace ED2023.App.ViewModels;
 
 public class EditGroupViewModel : ViewModelBase {
     private Client? _memberToAdd;
+    private Group _item;
 
-    public GroupAvalonia Item { get; set; } = new() {
-        Members = new AvaloniaList<Client>()
-    };
+    public Group Item {
+        get => _item;
+        set => this.RaiseAndSetIfChanged(ref _item, value);
+    }
 
-    public IList<Teacher> Teachers => DatabaseContext.Instance.Teachers.ToList();
-    public IList<Client> Clients => DatabaseContext.Instance.Clients.ToList();
+    public IList<Teacher> Teachers => DatabaseContext.InstanceFor(this).Teachers.ToList();
+    public IList<Client> Clients => DatabaseContext.InstanceFor(this).Clients.ToList();
 
-    public IList<Course> Courses => DatabaseContext.Instance.Courses.ToList();
+    public IList<Course> Courses => DatabaseContext.InstanceFor(this).Courses.ToList();
 
     public Client? MemberToAdd {
         get => _memberToAdd;
         set => this.RaiseAndSetIfChanged(ref _memberToAdd, value);
     }
 
-    public ReactiveCommand<Unit, Unit> AddMemberCommand { get; }
-    public ReactiveCommand<Unit, Unit> CloseCommand { get; }
-    public ReactiveCommand<Unit, Unit> AcceptCommand { get; }
-
+    public ReactiveCommand<Unit, Unit> AddMemberCommand { get; private set; }
+    public ReactiveCommand<Unit, Unit> CloseCommand { get; private set; }
+    public ReactiveCommand<Unit, Unit> AcceptCommand { get; private set; }
+    public ReactiveCommand<Client?, Unit> RemoveMemberCommand { get; private set; }
+    
     public EditGroupViewModel(Window parent, Action<Group?> acceptAction) {
+        Item = new() {
+            Members = new AvaloniaList<Client>()
+        };
         var canAddMember = this.WhenAnyValue(
             x => x.MemberToAdd,
             selector: i => i is not null
         );
-        var canSave = this.WhenAnyValue(
-            x => x.Item,
-            x => x.Item.Name,
-            x => x.Item.Members,
-            x => x.Item.ResponsibleTeacher,
-            selector: (i1, i2, i3, i4) =>
-                i1 is not null
-                && i2 is not null
-                && i3 is not null
-                && i4 is not null
-        );
         AddMemberCommand = ReactiveCommand.Create(AddMember, canAddMember);
         CloseCommand = ReactiveCommand.Create(parent.Close);
         AcceptCommand = ReactiveCommand.Create(() => {
+            bool isValid = !string.IsNullOrWhiteSpace(Item.Name)
+                           && Item.ResponsibleTeacher is not null
+                           && Item.Course is not null;
+            if (!isValid) {
+                MessageBoxManager.GetMessageBoxStandard(
+                                     "Ошибка", "Проверьте заполненность полей и правильность введенных значений")
+                                 .ShowAsPopupAsync(parent);
+                return;
+            }
+
             acceptAction(Item);
             parent.Close();
-        }, canSave);
+        });
+        RemoveMemberCommand = ReactiveCommand.Create<Client?>(RemoveMember);
     }
 
     private void AddMember() {
         if (MemberToAdd is null) return;
         this.RaisePropertyChanging(nameof(Item.Members));
-        Item.Members.Add(MemberToAdd);
+        Item.Members?.Add(MemberToAdd);
         this.RaisePropertyChanged(nameof(Item.Members));
         this.RaisePropertyChanged(nameof(Item));
     }
-}
 
-public class GroupAvalonia : Group {
-    public new AvaloniaList<Client>? Members { get; set; }
-
-    public GroupAvalonia(Group g) {
-        Id = g.Id;
-        Course = g.Course;
-        Members = new AvaloniaList<Client>(g.Members);
-        ResponsibleTeacher = g.ResponsibleTeacher;
-        Name = g.Name;
-    }
-
-    public GroupAvalonia() : base() {
-        
+    private void RemoveMember(Client? item) {
+        if (item is null) return;
+        this.RaisePropertyChanging(nameof(Item.Members));
+        Item.Members?.Remove(item);
+        this.RaisePropertyChanged(nameof(Item.Members));
+        this.RaisePropertyChanged(nameof(Item));
     }
 }

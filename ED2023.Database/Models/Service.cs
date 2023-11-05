@@ -2,9 +2,24 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ED2023.Database.Models;
 
-public class Service {
-    [Key] public int Id { get; set; }
+public class Service : ModelBase {
+    private string _name = string.Empty;
+    private decimal _price;
+    private int _id;
 
-    public string Name { get; set; } = string.Empty;
-    public decimal Price { get; set; }
+    [Key]
+    public int Id {
+        get => _id;
+        set => this.RaiseAndSetIfChanged(ref _id, value);
+    }
+
+    public string Name {
+        get => _name;
+        set => this.RaiseAndSetIfChanged(ref _name, value);
+    }
+
+    public decimal Price {
+        get => _price;
+        set => this.RaiseAndSetIfChanged(ref _price, value);
+    }
 }

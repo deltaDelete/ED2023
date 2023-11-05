@@ -27,4 +27,11 @@
   <ItemGroup>
     <ProjectReference Include="..\ED2023.Database\ED2023.Database.csproj" /> 
   </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Views\Dialogs\EditClientView.axaml.cs">
+      <DependentUpon>EditClientView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

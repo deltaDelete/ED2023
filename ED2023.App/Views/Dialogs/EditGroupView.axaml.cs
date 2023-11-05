@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Avalonia.ReactiveUI;
 using ED2023.App.ViewModels;
 using ED2023.Database.Models;
@@ -13,8 +14,10 @@ public partial class EditGroupView : ReactiveWindow<EditGroupViewModel> {
 
     public EditGroupView(Action<Group?> acceptAction, Group item) {
         InitializeComponent();
-        ViewModel = new(this, acceptAction) {
-            Item = new(item)
-        };
+        ViewModel = new(this, acceptAction);
+        var itemClone = item.Clone();
+        itemClone.ResponsibleTeacher = ViewModel.Teachers.FirstOrDefault(it => it.Id == item.ResponsibleTeacher.Id)!;
+        itemClone.Course = ViewModel.Courses.FirstOrDefault(it => it.Id == item.Course.Id)!;
+        ViewModel.Item = itemClone;
     }
 }

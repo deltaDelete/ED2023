@@ -2,9 +2,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ED2023.Database.Models; 
 
-public class Language {
-    [Key]
-    public int Id { get; set; }
+public class Language : ModelBase {
+    private int _id;
+    private string _name = string.Empty;
 
-    public string Name { get; set; } = string.Empty;
+    [Key]
+    public int Id {
+        get => _id;
+        set => this.RaiseAndSetIfChanged(ref _id, value);
+    }
+
+    public string Name {
+        get => _name;
+        set => this.RaiseAndSetIfChanged(ref _name, value);
+    }
 }

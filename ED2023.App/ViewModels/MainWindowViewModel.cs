@@ -17,6 +17,10 @@ public class MainWindowViewModel : ViewModelBase
         new() {
             Header = "Группы", 
             Content = new GroupView()
-        }
+        },
+        new() {
+            Header = "Клиенты",
+            Content = new ClientView()
+        },
     };
 }

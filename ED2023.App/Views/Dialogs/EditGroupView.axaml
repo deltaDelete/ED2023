@@ -8,6 +8,7 @@
                      mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                      x:Class="ED2023.App.Views.Dialogs.EditGroupView"
                      x:DataType="vm:EditGroupViewModel"
+                     Name="Prnt"
                      Padding="8"
                      Title="EditGroupWindow">
     <Design.DataContext>
@@ -62,7 +63,8 @@
             <Button Content="Закрыть" Command="{Binding CloseCommand}"/>
             <Button Content="Сохранить" Command="{Binding AcceptCommand}"/>
         </WrapPanel>
-        <DataGrid ItemsSource="{Binding Item.Members}">
+        <DataGrid ItemsSource="{Binding Item.Members}"
+                  IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Код"
                                     Binding="{Binding Id}" />
@@ -70,6 +72,13 @@
                                     Binding="{Binding LastName}" />
                 <DataGridTextColumn Header="Имя"
                                     Binding="{Binding FirstName}" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Удалить" Command="{ReflectionBinding #Prnt.ViewModel.RemoveMemberCommand}" CommandParameter="{Binding }"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

@@ -38,12 +38,12 @@ public partial class GroupView : ReactiveUserControl<TableViewModelBase<Group>>,
         if (i is null) {
             return;
         }
+
         var mbox = MessageBoxManager.GetMessageBoxCustom(
-            new () {
-                
+            new() {
                 ButtonDefinitions = new ButtonDefinition[] {
-                    new() {Name = "Да", IsDefault = true},
-                    new() {Name = "Нет", IsCancel = true}
+                    new() { Name = "Да", IsDefault = true },
+                    new() { Name = "Нет", IsCancel = true }
                 },
                 ContentTitle = "Подтверждение",
                 ContentMessage = $"Вы действительно хотите удалить группу {i.Name}",
@@ -57,17 +57,18 @@ public partial class GroupView : ReactiveUserControl<TableViewModelBase<Group>>,
         );
         var result = await mbox.ShowAsPopupAsync(this);
         if (result is not "Да") return;
-        
-        DatabaseContext.Instance.Groups.Remove(i);
-        await DatabaseContext.Instance.SaveChangesAsync();
+
+        DatabaseContext.InstanceFor(this).Groups.Remove(i);
+        await DatabaseContext.InstanceFor(this).SaveChangesAsync();
         ViewModel?.RemoveLocal(i);
     }
 
     private async Task NewItem() {
         var window = new EditGroupView(group => {
             if (group is null) return;
-            DatabaseContext.Instance.Groups.Add(group);
-            DatabaseContext.Instance.SaveChanges();
+            using var db = DatabaseContext.NewInstance();
+            db.Groups.Add(group);
+            db.SaveChanges();
             this.Log().Error(group.Id);
             ViewModel!.AddLocal(group);
         });
@@ -78,42 +79,49 @@ public partial class GroupView : ReactiveUserControl<TableViewModelBase<Group>>,
         if (i is null) return;
         var window = new EditGroupView(group => {
             if (group is null) return;
-            DatabaseContext.Instance.Groups.Update(i);
-            DatabaseContext.Instance.SaveChanges();
+            using var db = DatabaseContext.NewInstance();
+            // TODO: РЕШИТЬ КАКУЮ ТО МАГИЮ С КЛЮЧАМИ В СВЯЗИ МНОГИЕ КО МНОГИМ, может сделать третью таблицу не ключ-ключ, а ключ-ссылка-ссылка
+            db.Groups.Update(i);
+            db.SaveChanges();
             this.Log().Error(group.Id);
             ViewModel!.ReplaceItem(i, group);
         }, i);
         await window.ShowDialog(Application.Current!.MainWindow());
     }
 
-    private static readonly Dictionary<int,Func<Group,object>> OrderSelectors = new() {
-        {1, it => it.Id},
-        {2, it => it.Name},
-        {3, it => $"{it.ResponsibleTeacher.LastName} {it.ResponsibleTeacher.FirstName}" },
-        {4, it => it.Course.Title},
+    private static readonly Dictionary<int, Func<Group, object>> OrderSelectors = new() {
+        { 1, it => it.Id },
+        { 2, it => it.Name },
+        { 3, it => $"{it.ResponsibleTeacher.LastName} {it.ResponsibleTeacher.FirstName}" },
+        { 4, it => it.Course.Title },
     };
 
     private static readonly Dictionary<int, Func<string, Func<Group, bool>>> FilterSelectors = new() {
         { 1, query => it => it.Id.ToString().Contains(query) },
-        { 2, query => it => it.Name.ToLower().Contains(query) },
-        { 3, query => it => $"{it.ResponsibleTeacher.LastName} {it.ResponsibleTeacher.FirstName}".ToLower().Contains(query) },
-        { 4, query => it => it.Course.Title.ToLower().Contains(query) },
+        { 2, query => it => it.Name.Contains(query, StringComparison.InvariantCultureIgnoreCase) }, {
+            3,
+            query => it =>
+                $"{it.ResponsibleTeacher.LastName} {it.ResponsibleTeacher.FirstName}".Contains(
+                    query, StringComparison.InvariantCultureIgnoreCase)
+        },
+        { 4, query => it => it.Course.Title.Contains(query, StringComparison.InvariantCultureIgnoreCase) },
     };
 
-    private static readonly Func<Group, object> DefaultOrderSelector = it => it.Id;
+    private static object DefaultOrderSelector(Group it) => it.Id;
 
-    private static readonly Func<string, Func<Group, bool>> DefaultFilterSelector =
-        query => it => it.Id.ToString().Contains(query)
-                       || it.Name.ToLower().Contains(query)
-                       || $"{it.ResponsibleTeacher.LastName} {it.ResponsibleTeacher.FirstName}".ToLower().Contains(query)
-                       || it.Course.Title.ToLower().Contains(query)
-                       || it.Members.Count.ToString().Contains(query);
-    
-    private static List<Group> DatabaseGetter() {
-        return DatabaseContext.Instance.Groups
-            .Include(x => x.Course)
-            .Include(x => x.Members)
-            .Include(x => x.ResponsibleTeacher)
-            .ToList();
+    private static Func<Group, bool> DefaultFilterSelector(string query)
+        => it => it.Id.ToString().Contains(query, StringComparison.InvariantCultureIgnoreCase)
+                 || it.Name.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+                 || $"{it.ResponsibleTeacher.LastName} {it.ResponsibleTeacher.FirstName}".Contains(
+                     query, StringComparison.InvariantCultureIgnoreCase)
+                 || it.Course.Title.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+                 || it.Members.Count.ToString().Contains(query, StringComparison.InvariantCultureIgnoreCase);
+
+    private List<Group> DatabaseGetter() {
+        return DatabaseContext.InstanceFor(this).Groups
+                              .Include(x => x.Course)
+                              .Include(x => x.Members)
+                              .Include(x => x.ResponsibleTeacher)
+                              .ToList();
     }
 }

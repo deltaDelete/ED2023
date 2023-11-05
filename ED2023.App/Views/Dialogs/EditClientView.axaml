@@ -1,0 +1,46 @@
+<rxui:ReactiveWindow x:TypeArguments="vm:EditClientViewModel" xmlns="https://github.com/avaloniaui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:rxui="http://reactiveui.net"
+                     xmlns:vm="clr-namespace:ED2023.App.ViewModels"
+                     xmlns:m="clr-namespace:ED2023.Database.Models;assembly=ED2023.Database"
+                     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                     x:Class="ED2023.App.Views.Dialogs.EditClientView"
+                     x:DataType="vm:EditClientViewModel"
+                     Name="Prnt"
+                     Padding="8"
+                     Title="EditClientWindow">
+    <Design.DataContext>
+        <vm:EditClientViewModel />
+    </Design.DataContext>
+    <Window.Styles>
+        <Style Selector="Label">
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+        </Style>
+    </Window.Styles>
+    <DockPanel LastChildFill="True">
+        <DockPanel Margin="8 8 0 8" DockPanel.Dock="Top" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Left" Spacing="8">
+                <Label Content="Фамилия" />
+                <Label Content="Имя" />
+                <Label Content="Телефон" />
+                <Label Content="Почта" />
+                <Label Content="Дата рождения" />
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" Spacing="8">
+                <TextBox Watermark="Фамилия" Text="{Binding Item.LastName}" />
+                <TextBox Watermark="Имя" Text="{Binding Item.FirstName}" />
+                <NumericUpDown FormatString="+0 (000) 000 00-00" Increment="1" ShowButtonSpinner="False" Text="{Binding Item.Phone}" />
+                <TextBox Watermark="Электронная почта" Text="{Binding Item.Email}" />
+                <DatePicker SelectedDate="{Binding Item.BirthDate}" />
+            </StackPanel>
+        </DockPanel>
+        <WrapPanel Classes="spaced-8" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button Content="Закрыть" Command="{Binding CloseCommand}"/>
+            <Button Content="Сохранить" Command="{Binding AcceptCommand}"/>
+        </WrapPanel>
+    </DockPanel>
+</rxui:ReactiveWindow>

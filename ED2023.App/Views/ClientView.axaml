@@ -1,16 +1,15 @@
-<rxui:ReactiveUserControl xmlns="https://github.com/avaloniaui"
+<rxui:ReactiveUserControl x:TypeArguments="vm:TableViewModelBase" xmlns="https://github.com/avaloniaui"
                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                           xmlns:rxui="http://reactiveui.net"
-                          xmlns:vm="clr-namespace:ED2023.App.ViewModels"
                           xmlns:models="clr-namespace:ED2023.Database.Models;assembly=ED2023.Database"
+                          xmlns:vm="clr-namespace:ED2023.App.ViewModels"
                           mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-                          x:Class="ED2023.App.Views.GroupView"
-                          x:TypeArguments="vm:TableViewModelBase"
-                          x:DataType="vm:TableViewModelBase">
+                          x:DataType="vm:TableViewModelBase"
+                          x:Class="ED2023.App.Views.ClientView">
     <Design.DataContext>
-        <vm:TableViewModelBase x:TypeArguments="models:Group" />
+        <vm:TableViewModelBase x:TypeArguments="models:Client" />
     </Design.DataContext>
     <DockPanel LastChildFill="True">
         <ScrollViewer HorizontalScrollBarVisibility="Auto" DockPanel.Dock="Top">
@@ -19,9 +18,9 @@
                 <ComboBox SelectedIndex="{Binding SelectedSearchColumn}" ItemsSource="{Binding #Table.Columns}"
                           DisplayMemberBinding="{Binding Header}" />
                 <CheckBox IsChecked="{Binding IsSortByDescending}">Сортировка по убыванию</CheckBox>
-                <Button Content="Создать группу" Command="{Binding NewItemCommand}" />
-                <Button Content="Изменить группу" Command="{Binding EditItemCommand}" />
-                <Button Content="Удалить группу" Command="{Binding RemoveItemCommand}" />
+                <Button Content="Создать" Command="{Binding NewItemCommand}" />
+                <Button Content="Изменить" Command="{Binding EditItemCommand}" />
+                <Button Content="Удалить" Command="{Binding RemoveItemCommand}" />
                 <Button Content="Обновить" Command="{Binding ReloadCommand}" />
             </StackPanel>
         </ScrollViewer>
@@ -53,21 +52,12 @@
                       x:CompileBindings="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn IsVisible="False" Header="Все столбцы" />
-                    <DataGridTextColumn x:DataType="models:Group" Header="Код" Binding="{Binding Id}" />
-                    <DataGridTextColumn x:DataType="models:Group" Header="Наименование" Binding="{Binding Name}" />
-                    <DataGridTextColumn x:DataType="models:Group" Header="Руководитель">
-                        <DataGridTextColumn.Binding>
-                            <MultiBinding StringFormat="{}{0} {1}">
-                                <MultiBinding.Bindings>
-                                    <Binding x:DataType="models:Group" Path="ResponsibleTeacher.LastName" />
-                                    <Binding Path="ResponsibleTeacher.FirstName" />
-                                </MultiBinding.Bindings>
-                            </MultiBinding>
-                        </DataGridTextColumn.Binding>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn x:DataType="models:Group" Header="Курс" Binding="{Binding Course.Title}" />
-                    <DataGridTextColumn x:DataType="models:Group" Header="Количество студентов"
-                                        Binding="{Binding Members.Count}" />
+                    <DataGridTextColumn Header="Код" Binding="{Binding Id}" />
+                    <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" />
+                    <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" />
+                    <DataGridTextColumn Header="Почта" Binding="{Binding Email}" />
+                    <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" />
+                    <DataGridTextColumn Header="Дата рождения" Binding="{Binding BirthDate, StringFormat='dd MMMM yyyy'}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
