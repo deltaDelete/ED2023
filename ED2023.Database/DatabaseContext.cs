@@ -1,4 +1,5 @@
-﻿using Avalonia.Data;
+﻿using System.Runtime.CompilerServices;
+using Avalonia.Data;
 using ED2023.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,8 +9,8 @@ namespace ED2023.Database;
 public class DatabaseContext : DbContext {
     public static readonly string
         ConnectionString = 
-            "server=localhost;user=dev;password=devPassword;database=ed2023";
-            // "server=10.10.1.24;user=user_01;password=user01pro;database=pro1_2";
+            // "server=localhost;user=dev;password=devPassword;database=ed2023";
+            "server=10.10.1.24;user=user_01;password=user01pro;database=pro1_2";
 
     public DbSet<Attendance> Attendances { get; set; }
     public DbSet<Client> Clients { get; set; }
@@ -33,11 +34,14 @@ public class DatabaseContext : DbContext {
             ConnectionString,
             ServerVersion.AutoDetect(ConnectionString)
         );
+        optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.LogTo(Console.WriteLine);
     }
 
     private static readonly Lazy<DatabaseContext> LazyInstance = new Lazy<DatabaseContext>(() => new DatabaseContext());
     public static DatabaseContext Instance => LazyInstance.Value;
-
+    
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public static DatabaseContext InstanceFor(object context) {
         if (Instances.TryGetValue(context, out var instance)) {
             return instance;

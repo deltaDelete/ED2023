@@ -1,27 +1,24 @@
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Avalonia.Data;
-using ED2023.Database;
+using System.Threading.Tasks;
+using Avalonia.Collections;
 using ED2023.Database.Models;
-using Microsoft.EntityFrameworkCore;
+using ReactiveUI;
 
-namespace ED2023.App.ViewModels;
+namespace ED2023.App.ViewModels; 
 
-public class ScheduleViewModel : ViewModelBase {
-    private int _pageItems = 10;
-    
-    public BindingList<Schedule> Items { get; set; }
+public class ScheduleViewModel : TableViewModelBase<Schedule> {
+    private AvaloniaList<IGrouping<Group, Schedule>> _items1 = new();
 
-    public ScheduleViewModel() {
-        Items = GetItems();
+    public new AvaloniaList<IGrouping<Group, Schedule>> Items {
+        get => _items1;
+        set => this.RaiseAndSetIfChanged(ref _items1, value);
     }
 
-    private BindingList<Schedule> GetItems() {
-         return new BindingList<Schedule>(
-            DatabaseContext.Instance.Schedules.Take(_pageItems)
-                .Include(x => x.Course)
-                .Include(x => x.Group)
-                .ToList()
-        );
+    public new Schedule SelectedRow { get; set; }
+    
+    public ScheduleViewModel(Func<List<Schedule>> databaseGetter, Dictionary<int, Func<Schedule, object>> orderSelectors, Func<Schedule, object> defaultOrderSelector, Dictionary<int, Func<string, Func<Schedule, bool>>> filterSelectors, Func<string, Func<Schedule, bool>> defaultFilterSelector, Action<Schedule?> editItem, Func<Task> newItem, Action<Schedule?> removeItem) : base(databaseGetter, orderSelectors, defaultOrderSelector, filterSelectors, defaultFilterSelector, editItem, newItem, removeItem) {
+        // TODO: Доделать вм для расписания, сделать добавление, удаление, изменение
     }
 }

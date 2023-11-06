@@ -283,6 +283,6 @@ public abstract class TableViewModelBase : ViewModelBase {
     }
 
     public List<object> Filtered { get; set; } = new();
-    public BindingList<object> Items { get; set; } = new();
+    public AvaloniaList<object> Items { get; set; } = new();
     public object? SelectedRow { get; set; } = default;
 }

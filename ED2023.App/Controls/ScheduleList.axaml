@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:rxui="http://reactiveui.net"
+             xmlns:vm="clr-namespace:ED2023.App.ViewModels"
+             xmlns:global="clr-namespace:"
+             xmlns:controls="clr-namespace:ED2023.App.Controls"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:linq="clr-namespace:System.Linq;assembly=System.Linq"
+             xmlns:models="clr-namespace:ED2023.Database.Models;assembly=ED2023.Database"
+             xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
+             Name="PART_ScheduleList"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ED2023.App.Controls.ScheduleList">
+    <UserControl.Styles>
+        <Style Selector="Border.schedule-item">
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush" Value="#ff11aaee" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="8" />
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="#33000000" />
+            </Style>
+        </Style>
+    </UserControl.Styles>
+    <ItemsControl Name="PART_VerticalItems" ItemsSource="{Binding #PART_ScheduleList.Items}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate x:CompileBindings="False">
+                <Border BorderThickness="0 0 0 1" BorderBrush="#66000000">
+
+                    <DockPanel LastChildFill="True" Margin="5">
+                        <Border DockPanel.Dock="Left" Width="128" BorderThickness="0 0 1 0" BorderBrush="#33000000"
+                                Margin="0 8 16 8">
+                            <TextBlock VerticalAlignment="Center" Padding="15"
+                                       Text="{Binding Key.Name, FallbackValue='Ящеры'}" />
+                        </Border>
+                        <StackPanel Orientation="Horizontal">
+                            <ItemsControl ItemsSource="{Binding .}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="8" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Classes="schedule-item">
+                                            <Border.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Изменить" Command="{Binding #PART_ScheduleList.EditItemCommand}" CommandParameter="{Binding .}"/>
+                                                    <MenuItem Header="Удалить" Command="{Binding #PART_ScheduleList.RemoveItemCommand}" CommandParameter="{Binding .}"/>
+                                                </ContextMenu>
+                                            </Border.ContextMenu>
+                                            <WrapPanel Classes="spaced-8" Orientation="Vertical">
+                                                <Label Content="{Binding Course.Title, FallbackValue='Древнерусский'}"
+                                                       FontWeight="Bold" />
+                                                <Label
+                                                    Content="{Binding Start, StringFormat='dd MM yyyy HH:mm', FallbackValue='01 01 1984 12:00'}" />
+                                                <Label
+                                                    Content="{Binding End, StringFormat='dd MM yyyy HH:mm', FallbackValue='01 01 1984 12:00'}" />
+                                            </WrapPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </DockPanel>
+
+                </Border>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

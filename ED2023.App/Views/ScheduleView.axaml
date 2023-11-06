@@ -1,24 +1,32 @@
-<rxui:ReactiveUserControl x:TypeArguments="vm:ScheduleViewModel" xmlns="https://github.com/avaloniaui"
+<rxui:ReactiveUserControl x:TypeArguments="vm:TableViewModelBase" xmlns="https://github.com/avaloniaui"
                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                 xmlns:rxui="http://reactiveui.net"
                                 xmlns:app="clr-namespace:ED2023.App"
                                 xmlns:vm="clr-namespace:ED2023.App.ViewModels"
+                                xmlns:controls="clr-namespace:ED2023.App.Controls"
+                                xmlns:views="clr-namespace:ED2023.App.Views"
+                                xmlns:linq="clr-namespace:System.Linq;assembly=System.Linq"
+                                xmlns:models="clr-namespace:ED2023.Database.Models;assembly=ED2023.Database"
                                 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-                                x:DataType="vm:ScheduleViewModel"
+                                x:DataType="vm:TableViewModelBase"
                                 x:Class="ED2023.App.Views.ScheduleView">
-    <DataGrid ItemsSource="{Binding Items}"
-              AutoGenerateColumns="False"
-              CanUserResizeColumns="True"
-              CanUserSortColumns="True"
-              IsReadOnly="True">
-        <DataGrid.Columns>
-            <DataGridTextColumn Header="Код" Binding="{Binding Id}"/>
-            <DataGridTextColumn Header="Начало" Binding="{Binding Start, StringFormat='dd MMMM yyyy HH:mm'}"/>
-            <DataGridTextColumn Header="Конец" Binding="{Binding End, StringFormat='dd MMMM yyyy HH:mm'}"/>
-            <DataGridTextColumn Header="Курс" Binding="{Binding Course.Title}"/>
-            <DataGridTextColumn Header="Группа" Binding="{Binding Group.Name}"/>
-        </DataGrid.Columns>
-    </DataGrid>
+    <Design.DataContext>
+        <vm:TableViewModelBase />
+    </Design.DataContext>
+    
+    <DockPanel LastChildFill="True">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal" Spacing="5" Margin="8 16">
+                <Button Content="Создать" Command="{Binding NewItemCommand}" />
+                <Button Content="Обновить" Command="{Binding ReloadCommand}" />
+            </StackPanel>
+        </ScrollViewer>
+        <Grid>
+            <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsLoading}" HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+            <controls:ScheduleList Items="{ReflectionBinding Items}" Name="List"/>
+        </Grid>
+    </DockPanel>
 </rxui:ReactiveUserControl>
