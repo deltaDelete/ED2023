@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Avalonia.Collections;
 
 namespace ED2023.Database.Models; 
 
@@ -6,8 +7,9 @@ public class Schedule : ModelBase {
     private int _id;
     private DateTimeOffset _start;
     private DateTimeOffset _end;
-    private Course _course;
-    private Group _group;
+    private Course? _course;
+    private Group? _group;
+    private AvaloniaList<Attendance>? _attendances;
 
     [Key]
     public int Id {
@@ -25,13 +27,26 @@ public class Schedule : ModelBase {
         set => this.RaiseAndSetIfChanged(ref _end, value);
     }
 
-    public Course Course {
+    public Course? Course {
         get => _course;
         set => this.RaiseAndSetIfChanged(ref _course, value);
     }
 
-    public Group Group {
+    public Group? Group {
         get => _group;
         set => this.RaiseAndSetIfChanged(ref _group, value);
+    }
+
+    public AvaloniaList<Attendance>? Attendances {
+        get => _attendances;
+        set => this.RaiseAndSetIfChanged(ref _attendances, value);
+    }
+
+    public override Schedule Clone() {
+        return new() {
+            Id = Id,
+            Start = Start,
+            End = End,
+        };
     }
 }

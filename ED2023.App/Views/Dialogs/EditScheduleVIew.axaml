@@ -1,0 +1,97 @@
+<rxui:ReactiveWindow x:TypeArguments="vm:EditScheduleViewModel" xmlns="https://github.com/avaloniaui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:rxui="http://reactiveui.net"
+                     xmlns:vm="clr-namespace:ED2023.App.ViewModels"
+                     xmlns:m="clr-namespace:ED2023.Database.Models;assembly=ED2023.Database"
+                     xmlns:utils="clr-namespace:ED2023.App.Utils"
+                     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                     x:Class="ED2023.App.Views.Dialogs.EditScheduleView"
+                     x:DataType="vm:EditScheduleViewModel"
+                     Name="Prnt"
+                     Padding="8"
+                     Title="EditGroupWindow">
+    <Design.DataContext>
+        <vm:EditScheduleViewModel />
+    </Design.DataContext>
+    <Window.Styles>
+        <Style Selector="Label">
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+        </Style>
+    </Window.Styles>
+    <Window.Resources>
+        <utils:TimeSpanToDateTimeBindingConverter x:Key="TimeBindingConverter" />
+    </Window.Resources>
+    <DockPanel>
+        <DockPanel Margin="8 8 0 8" DockPanel.Dock="Top" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Left" Spacing="8">
+                <Label Content="Начало" />
+                <Label Content="Конец" />
+                <Label Content="Курс" />
+                <Label Content="Группа" />
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" Spacing="8">
+                <WrapPanel Orientation="Horizontal" Classes="spaced-8">
+                    <DatePicker SelectedDate="{Binding Item.Start}" Height="32" />
+                    <TimePicker
+                        Name="StartTimePicker"
+                        SelectedTimeChanged="StartTimePickerChanged"
+                        MinuteIncrement="1"
+                        ClockIdentifier="24HourClock"
+                        Height="32" />
+                </WrapPanel>
+                <WrapPanel Orientation="Horizontal" Classes="spaced-8">
+                    <DatePicker SelectedDate="{Binding Item.End}" Height="32" />
+                    <TimePicker
+                        Name="EndTimePicker"
+                        SelectedTimeChanged="EndTimePickerChanged"
+                        MinuteIncrement="1"
+                        ClockIdentifier="24HourClock"
+                        Height="32" />
+                </WrapPanel>
+                <ComboBox ItemsSource="{Binding Courses}"
+                          SelectedItem="{Binding Item.Course, FallbackValue='Не указано'}"
+                          DisplayMemberBinding="{Binding Title}" />
+                <ComboBox ItemsSource="{Binding Groups}"
+                          SelectedItem="{Binding Item.Group, FallbackValue='Не указано'}"
+                          DisplayMemberBinding="{Binding Name}" />
+            </StackPanel>
+        </DockPanel>
+        <WrapPanel Classes="spaced-8" Margin="8 0 8 8" DockPanel.Dock="Top" Orientation="Horizontal">
+            <Label Content="Пропустили" Height="32" DockPanel.Dock="Top"/>
+            <Button Content="Добавить" Command="{Binding AddMemberCommand}"/>
+            <ComboBox ItemsSource="{Binding Clients}" 
+                      SelectedItem="{Binding MemberToAdd}">
+                <ComboBox.DisplayMemberBinding>
+                    <MultiBinding StringFormat="{}{0} {1}" x:DataType="m:Client">
+                        <MultiBinding.Bindings>
+                            <Binding Path="LastName" FallbackValue="Не" />
+                            <Binding Path="FirstName" FallbackValue="указано"/>
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </ComboBox.DisplayMemberBinding>
+            </ComboBox>
+        </WrapPanel>
+        <WrapPanel Classes="spaced-8" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button Content="Закрыть" Command="{Binding CloseCommand}" />
+            <Button Content="Сохранить" Command="{Binding AcceptCommand}" />
+        </WrapPanel>
+        
+        <DataGrid ItemsSource="{Binding Item.Attendances}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Фамилия" Binding="{Binding Client.LastName}" />
+                <DataGridTextColumn Header="Имя" Binding="{Binding Client.FirstName}" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Удалить" Command="{ReflectionBinding #Prnt.ViewModel.RemoveMemberCommand}" CommandParameter="{Binding .}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</rxui:ReactiveWindow>

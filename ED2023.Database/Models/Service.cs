@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Avalonia.Collections;
 
 namespace ED2023.Database.Models;
 
@@ -22,4 +23,6 @@ public class Service : ModelBase {
         get => _price;
         set => this.RaiseAndSetIfChanged(ref _price, value);
     }
+
+    public AvaloniaList<Payment>? Payments { get; set; }
 }

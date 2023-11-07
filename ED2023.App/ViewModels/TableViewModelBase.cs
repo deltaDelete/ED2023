@@ -16,7 +16,7 @@ using ReactiveUI;
 namespace ED2023.App.ViewModels;
 
 public class TableViewModelBase<T> : TableViewModelBase {
-    private List<T> _itemsFull = null!;
+    protected List<T> _itemsFull = null!;
 
     private readonly Func<List<T>> _databaseGetter;
 
@@ -40,10 +40,10 @@ public class TableViewModelBase<T> : TableViewModelBase {
     /// </summary>
     private readonly Func<string, Func<T, bool>> _defaultFilterSelector;
 
-    private readonly Action<T?> _editItem;
-    private readonly Func<Task> _newItem;
-    private readonly Action<T?> _removeItem;
-    private AvaloniaList<T> _items = new();
+    protected readonly Action<T?> _editItem;
+    protected readonly Func<Task> _newItem;
+    protected readonly Action<T?> _removeItem;
+    protected AvaloniaList<T> _items = new();
     private List<T> _filtered = new List<T>();
     private T? _selectedRow = default;
 

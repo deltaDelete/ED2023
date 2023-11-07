@@ -38,6 +38,17 @@ public class DatabaseContext : DbContext {
         optionsBuilder.LogTo(Console.WriteLine);
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Attendance>()
+            .HasOne(e => e.Client)
+            .WithMany(e => e.Attendance);
+        
+        modelBuilder.Entity<Attendance>()
+            .HasOne(e => e.Schedule)
+            .WithMany(e => e.Attendances);
+    }
+
     private static readonly Lazy<DatabaseContext> LazyInstance = new Lazy<DatabaseContext>(() => new DatabaseContext());
     public static DatabaseContext Instance => LazyInstance.Value;
     

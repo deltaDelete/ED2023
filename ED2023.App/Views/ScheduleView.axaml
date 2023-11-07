@@ -1,4 +1,4 @@
-<rxui:ReactiveUserControl x:TypeArguments="vm:TableViewModelBase" xmlns="https://github.com/avaloniaui"
+<rxui:ReactiveUserControl x:TypeArguments="vm:ScheduleViewModel" xmlns="https://github.com/avaloniaui"
                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,10 +10,10 @@
                                 xmlns:linq="clr-namespace:System.Linq;assembly=System.Linq"
                                 xmlns:models="clr-namespace:ED2023.Database.Models;assembly=ED2023.Database"
                                 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-                                x:DataType="vm:TableViewModelBase"
+                                x:DataType="vm:ScheduleViewModel"
                                 x:Class="ED2023.App.Views.ScheduleView">
     <Design.DataContext>
-        <vm:TableViewModelBase />
+        <vm:ScheduleViewModel />
     </Design.DataContext>
     
     <DockPanel LastChildFill="True">
@@ -26,7 +26,7 @@
         <Grid>
             <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsLoading}" HorizontalAlignment="Center"
                          VerticalAlignment="Center" />
-            <controls:ScheduleList Items="{ReflectionBinding Items}" Name="List"/>
+            <controls:ScheduleList Items="{ReflectionBinding GroupedItems}" Name="List"/>
         </Grid>
     </DockPanel>
 </rxui:ReactiveUserControl>

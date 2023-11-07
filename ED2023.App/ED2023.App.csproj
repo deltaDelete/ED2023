@@ -28,4 +28,15 @@
     <ProjectReference Include="..\ED2023.Database\ED2023.Database.csproj" /> 
   </ItemGroup>
   
+  <ItemGroup>
+    <Compile Update="Views\Dialogs\EditScheduleVIew.axaml.cs">
+      <DependentUpon>EditScheduleVIew.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\PaymentView.axaml.cs">
+      <DependentUpon>PaymentView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  
 </Project>

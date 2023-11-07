@@ -3,6 +3,7 @@ using System;
 using ED2023.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ED2023.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231107070727_PaymentsManyMany")]
+    partial class PaymentsManyMany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -330,7 +333,7 @@ namespace ED2023.Database.Migrations
                         .IsRequired();
 
                     b.HasOne("ED2023.Database.Models.Schedule", "Schedule")
-                        .WithMany("Attendances")
+                        .WithMany()
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -458,11 +461,6 @@ namespace ED2023.Database.Migrations
             modelBuilder.Entity("ED2023.Database.Models.Course", b =>
                 {
                     b.Navigation("Groups");
-                });
-
-            modelBuilder.Entity("ED2023.Database.Models.Schedule", b =>
-                {
-                    b.Navigation("Attendances");
                 });
 
             modelBuilder.Entity("ED2023.Database.Models.Teacher", b =>

@@ -3,6 +3,7 @@ using System;
 using ED2023.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ED2023.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231102082748_TeacherFix")]
+    partial class TeacherFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,10 +256,15 @@ namespace ED2023.Database.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("PaymentId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PaymentId");
 
                     b.ToTable("Services");
                 });
@@ -291,21 +299,6 @@ namespace ED2023.Database.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("PaymentService", b =>
-                {
-                    b.Property<int>("PaymentsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ServicesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PaymentsId", "ServicesId");
-
-                    b.HasIndex("ServicesId");
-
-                    b.ToTable("PaymentService");
-                });
-
             modelBuilder.Entity("ClientGroup", b =>
                 {
                     b.HasOne("ED2023.Database.Models.Group", null)
@@ -330,7 +323,7 @@ namespace ED2023.Database.Migrations
                         .IsRequired();
 
                     b.HasOne("ED2023.Database.Models.Schedule", "Schedule")
-                        .WithMany("Attendances")
+                        .WithMany()
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -435,19 +428,11 @@ namespace ED2023.Database.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("PaymentService", b =>
+            modelBuilder.Entity("ED2023.Database.Models.Service", b =>
                 {
                     b.HasOne("ED2023.Database.Models.Payment", null)
-                        .WithMany()
-                        .HasForeignKey("PaymentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ED2023.Database.Models.Service", null)
-                        .WithMany()
-                        .HasForeignKey("ServicesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Services")
+                        .HasForeignKey("PaymentId");
                 });
 
             modelBuilder.Entity("ED2023.Database.Models.Client", b =>
@@ -460,9 +445,9 @@ namespace ED2023.Database.Migrations
                     b.Navigation("Groups");
                 });
 
-            modelBuilder.Entity("ED2023.Database.Models.Schedule", b =>
+            modelBuilder.Entity("ED2023.Database.Models.Payment", b =>
                 {
-                    b.Navigation("Attendances");
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("ED2023.Database.Models.Teacher", b =>

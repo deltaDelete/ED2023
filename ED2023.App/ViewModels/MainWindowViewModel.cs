@@ -22,5 +22,9 @@ public class MainWindowViewModel : ViewModelBase
             Header = "Клиенты",
             Content = new ClientView()
         },
+        new() {
+            Header = "Платежи",
+            Content = new PaymentView()
+        }
     };
 }
