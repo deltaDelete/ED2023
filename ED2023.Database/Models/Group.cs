@@ -8,7 +8,7 @@ public class Group : ModelBase {
     private int _id;
     private string _name = string.Empty;
     private Teacher _responsibleTeacher;
-    private readonly AvaloniaList<Client> _members;
+    private AvaloniaList<Client> _members;
     private Course _course;
 
     [Key]
@@ -29,7 +29,7 @@ public class Group : ModelBase {
 
     public AvaloniaList<Client> Members {
         get => _members;
-        init => this.RaiseAndSetIfChanged(ref _members, value);
+        set => this.RaiseAndSetIfChanged(ref _members, value);
     }
 
     public Course Course {

@@ -23,6 +23,7 @@ public class DatabaseContext : DbContext {
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<Service> Services { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
+    public DbSet<ClientGroup> ClientGroups { get; set; }
     
     /// <inheritdoc cref="DbContext"/>
     public DatabaseContext() {
@@ -47,6 +48,14 @@ public class DatabaseContext : DbContext {
         modelBuilder.Entity<Attendance>()
             .HasOne(e => e.Schedule)
             .WithMany(e => e.Attendances);
+
+        modelBuilder.Entity<Client>()
+            .HasMany<Group>(x => x.Groups)
+            .WithMany(x => x.Members)
+            .UsingEntity<ClientGroup>(builder => {
+                builder.HasOne<Client>(x => x.Client);
+                builder.HasOne<Group>(x => x.Group);
+            });
     }
 
     private static readonly Lazy<DatabaseContext> LazyInstance = new Lazy<DatabaseContext>(() => new DatabaseContext());

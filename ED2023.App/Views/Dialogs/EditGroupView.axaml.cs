@@ -18,6 +18,7 @@ public partial class EditGroupView : ReactiveWindow<EditGroupViewModel> {
         var itemClone = item.Clone();
         itemClone.ResponsibleTeacher = ViewModel.Teachers.FirstOrDefault(it => it.Id == item.ResponsibleTeacher.Id)!;
         itemClone.Course = ViewModel.Courses.FirstOrDefault(it => it.Id == item.Course.Id)!;
+        itemClone.Members = item.Members;
         ViewModel.Item = itemClone;
     }
 }

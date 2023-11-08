@@ -15,7 +15,7 @@ using ED2023.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 
-namespace ED2023.App.Views; 
+namespace ED2023.App.Views;
 
 public partial class ScheduleView : ReactiveUserControl<ScheduleViewModel> {
     public ScheduleView() {
@@ -29,7 +29,7 @@ public partial class ScheduleView : ReactiveUserControl<ScheduleViewModel> {
             EditItem,
             NewItem,
             RemoveItem
-            );
+        );
         List.EditItemCommand = ReactiveCommand.Create<Schedule?>(schedule => {
             ViewModel.SelectedRow = ViewModel.Items.FirstOrDefault(it => it.Id == schedule?.Id);
             EditItem(ViewModel.SelectedRow);
@@ -47,9 +47,17 @@ public partial class ScheduleView : ReactiveUserControl<ScheduleViewModel> {
             var db = DatabaseContext.InstanceFor(this);
             db.Schedules.Attach(i);
             if (i.Attendances is not null) {
-                db.Attendances.AttachRange(i.Attendances);
-                db.Attendances.UpdateRange(i.Attendances);
+                foreach (var att in i.Attendances) {
+                    if (att is null) continue;
+                    try {
+                        db.Attendances.Attach(att);
+                    }
+                    catch (Exception e) {
+                        Console.WriteLine(e);
+                    }
+                }
             }
+
             db.Schedules.Update(i);
             db.SaveChanges();
             ViewModel!.ReplaceItem(i, schedule);

@@ -1,0 +1,34 @@
+<reactiveUi:ReactiveUserControl x:TypeArguments="vm:AttendanceReportViewModel" xmlns="https://github.com/avaloniaui"
+                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                xmlns:reactiveUi="http://reactiveui.net"
+                                xmlns:vm="clr-namespace:ED2023.App.ViewModels"
+                                mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                                x:DataType="vm:AttendanceReportViewModel"
+                                x:Class="ED2023.App.Views.AttendanceReport">
+    <Design.DataContext>
+        <vm:AttendanceReportViewModel />
+    </Design.DataContext>
+    
+    <DockPanel LastChildFill="True">
+        <WrapPanel Orientation="Horizontal"
+                   Classes="spaced-8"
+                   Margin="8"
+                   DockPanel.Dock="Top">
+            <ComboBox ItemsSource="{Binding Groups}"
+                      SelectedItem="{Binding Group}"
+                      DisplayMemberBinding="{Binding Name}"/>
+        </WrapPanel>
+        <DataGrid ItemsSource="{Binding Items}"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Код" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" />
+                <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" />
+                <DataGridTextColumn Header="Количество пропусков" Binding="{Binding Attendance.Count}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</reactiveUi:ReactiveUserControl>

@@ -80,7 +80,23 @@ public partial class GroupView : ReactiveUserControl<TableViewModelBase<Group>>,
         var window = new EditGroupView(group => {
             if (group is null) return;
             using var db = DatabaseContext.NewInstance();
-            // TODO: РЕШИТЬ КАКУЮ ТО МАГИЮ С КЛЮЧАМИ В СВЯЗИ МНОГИЕ КО МНОГИМ, может сделать третью таблицу не ключ-ключ, а ключ-ссылка-ссылка
+            try {
+                db.Groups.Attach(i);
+            }
+            catch (Exception e) {
+                Console.WriteLine(e);
+            }
+            if (i.Members?.Any() ?? false) {
+                foreach (var iMember in i.Members) {
+                    if (iMember is null) continue;
+                    try {
+                        db.Clients.Attach(iMember);
+                    }
+                    catch (Exception e) {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
             db.Groups.Update(i);
             db.SaveChanges();
             this.Log().Error(group.Id);

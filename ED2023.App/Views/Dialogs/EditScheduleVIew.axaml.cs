@@ -22,6 +22,7 @@ public partial class EditScheduleView : ReactiveWindow<EditScheduleViewModel> {
         var itemClone = item.Clone();
         itemClone.Course = ViewModel.Courses.FirstOrDefault(it => it.Id == item.Course.Id)!;
         itemClone.Group = ViewModel.Groups.FirstOrDefault(it => it.Id == item.Group.Id)!;
+        itemClone.Attendances = item.Attendances;
         ViewModel.Item = itemClone;
 
         SetTimePickers();

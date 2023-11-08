@@ -25,6 +25,10 @@ public class MainWindowViewModel : ViewModelBase
         new() {
             Header = "Платежи",
             Content = new PaymentView()
+        },
+        new() {
+            Header = "Пропуски",
+            Content = new AttendanceReport()
         }
     };
 }
